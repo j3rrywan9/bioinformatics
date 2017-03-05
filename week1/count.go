@@ -4,10 +4,10 @@ import (
   "fmt"
 )
 
-func Count(text, pattern string) int {
-  count, lengthOfText, lengthOfPattern := 0, len(text), len(pattern)
+func Count(text, pattern string) (int, []int) {
+  lengthOfText, lengthOfPattern, count, positions := len(text), len(pattern), 0, []int{}
   if lengthOfText < lengthOfPattern {
-    return 0
+    return 0, positions
   } else {
     for i := 0; i < lengthOfText; i++ {
       if i + lengthOfPattern > lengthOfText {
@@ -15,15 +15,21 @@ func Count(text, pattern string) int {
       } else {
         if text[i: i + lengthOfPattern] == pattern {
           count += 1
+          positions = append(positions, i)
         }
       }
     }
   }
-  return count
+  return count, positions
 }
 
 func main() {
-  count := Count("ACTGTACGATGATGTGTGTCAAAG", "TGT")
-  fmt.Printf("Count(ACTGTACGATGATGTGTGTCAAAG, TGT) = %d\n", count)
+  text, pattern := "ACTGTACGATGATGTGTGTCAAAG", "TGT"
+  count, _ := Count(text, pattern)
+  fmt.Printf("Count(%s, %s) = %d\n", text, pattern, count)
+
+  text, pattern = "ATGACTTCGCTGTTACGCGC", "CGC"
+  count, positions := Count(text, pattern)
+  fmt.Printf("Count(%s, %s) = %d, Positions = %v\n", text, pattern, count, positions)
 }
 
